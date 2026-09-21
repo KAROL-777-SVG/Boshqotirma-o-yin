@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE CHAOS MATRIX - Anti-Design Project</title>
+    <style>
+        /* CSS Reset & Variable Definitions */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg-color: #030303;
+            --matrix-green: #00ff66;
+            --glitch-pink: #ff0055;
+            --cyber-cyan: #00f0ff;
+            --warning-yellow: #fff500;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: #ffffff;
+            font-family: 'Courier New', Courier, monospace;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            cursor: crosshair;
+        }
+
+        /* Glitch Grid Background Overlay */
+        .grid-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 4px, 6px 100%;
+            z-index: 999;
+            pointer-events: none;
+        }
+
+        /* Top Notification Bar */
+        .announcement {
+            background-color: var(--warning-yellow);
+            color: #000;
+            font-weight: bold;
+            text-align: center;
+            padding: 10px;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-bottom: 5px solid #000;
+            position: relative;
+            z-index: 100;
+            transform: rotate(-0.5deg);
+        }
+
+        /* Main Container */
+        .main-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            position: relative;
+        }
+
+        /* Radical Header */
+        header {
+            margin-bottom: 80px;
+            position: relative;
+        }
+
+        .system-title {
+            font-size: clamp(3rem, 8vw, 7rem);
+            font-weight: 900;
+            color: var(--matrix-green);
+            text-transform: uppercase;
+            line-height: 0.9;
+            letter-spacing: -2px;
+            transform: skewX(-10deg) rotate(-2deg);
+            mix-blend-mode: exclusion;
+            position: relative;
+            display: inline-block;
+        }
+
+        .system-title::after {
+            content: "SYSTEM CORRUPTED";
+            position: absolute;
+            left: 4px;
+            top: 4px;
+            color: var(--glitch-pink);
+            z-index: -1;
+            opacity: 0.8;
+        }
+
+        .subtitle {
+            font-size: 18px;
+            color: var(--cyber-cyan);
+            margin-top: 20px;
+            background: #111;
+            display: inline-block;
+            padding: 5px 15px;
+            border-left: 5px solid var(--cyber-cyan);
+        }
+
+        /* The Breakable Layout Section */
+        .content-chaos-grid {
+            display: block;
+            position: relative;
+            margin-top: 50px;
+        }
+
+        /* Cards and Elements designed to be broken */
+        .brutal-card {
+            background: #111;
+            border: 4px solid #fff;
+            padding: 30px;
+            margin-bottom: 40px;
+            position: relative;
+            box-shadow: 12px 12px 0px var(--glitch-pink);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            max-width: 600px;
+        }
+
+        .brutal-card.right {
+            margin-left: auto;
+            border-color: var(--matrix-green);
+            box-shadow: -12px 12px 0px var(--cyber-cyan);
+            transform: rotate(1deg);
+        }
+
+        .brutal-card h2 {
+            font-size: 28px;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            color: #fff;
+            border-bottom: 2px dashed #444;
+            padding-bottom: 10px;
+        }
+
+        .brutal-card p {
+            font-size: 15px;
+            line-height: 1.6;
+            color: #ccc;
+            margin-bottom: 20px;
+        }
+
+        /* Giant Text overlapping */
+        .overlap-text {
+            position: absolute;
+            font-size: clamp(4rem, 12vw, 10rem);
+            font-weight: 900;
+            color: rgba(255, 255, 255, 0.03);
+            text-transform: uppercase;
+            pointer-events: none;
+            z-index: 0;
+            white-space: nowrap;
+        }
+        
+        .ot-1 { top: 20%; left: -5%; transform: rotate(15deg); color: rgba(0, 240, 255, 0.05); }
+        .ot-2 { top: 60%; right: -10%; transform: rotate(-10deg); color: rgba(255, 0, 85, 0.05); }
+
+        /* Interactive Buttons */
+        .trigger-btn {
+            background: var(--matrix-green);
+            color: #000;
+            font-family: inherit;
+            font-weight: bold;
+            font-size: 18px;
+            text-transform: uppercase;
+            padding: 15px 30px;
+            border: 3px solid #000;
+            cursor: pointer;
+            box-shadow: 5px 5px 0px #fff;
+            position: relative;
+            display: inline-block;
+            transition: all 0.05s ease;
+        }
+
+        .trigger-btn:active {
+            transform: translate(5px, 5px);
+            box-shadow: 0px 0px 0px #fff;
+        }
+
+        .btn-panic {
+            background: var(--glitch-pink);
+            color: white;
+            margin-left: 20px;
+        }
+
+        /* Chaos Manifestation Classes (Applied via JS) */
+        .shattered-element {
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s;
+            will-change: transform;
+        }
+
+        /* Glitch Animation */
+        @keyframes glitch-anim {
+            0% { clip-path: inset(40% 0 61% 0); }
+            20% { clip-path: inset(92% 0 1% 0); }
+            40% { clip-path: inset(5% 0 85% 0); }
+            60% { clip-path: inset(67% 0 24% 0); }
+            80% { clip-path: inset(12% 0 78% 0); }
+            100% { clip-path: inset(80% 0 5% 0); }
+        }
+
+        .active-glitch {
+            animation: glitch-anim 1s infinite linear alternate-reverse;
+        }
+
+        /* Floating particles or logs */
+        #log-console {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 320px;
+            height: 180px;
+            background: rgba(0, 0, 0, 0.85);
+            border: 2px solid var(--matrix-green);
+            padding: 10px;
+            font-size: 11px;
+            color: var(--matrix-green);
+            overflow-y: hidden;
+            z-index: 1000;
+            pointer-events: none;
+            box-shadow: 0 0 15px rgba(0, 255, 102, 0.2);
+        }
+
+        .log-line {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 4px;
+        }
+
+        footer {
+            margin-top: 100px;
+            border-top: 2px dashed #333;
+            padding-top: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="grid-overlay"></div>
+
+    <div class="announcement">
+        Ogohlantirish: Ushbu sahifa veb-dizayn qoliplarini yo'q qilish uchun dasturlangan.
+    </div>
+
+    <div class="main-container">
+        <span class="overlap-text ot-1">ANTI FORMAT</span>
+        <span class="overlap-text ot-2">DESTROY TECH</span>
+
+        <header>
+            <h1 class="system-title shattered-element">Chaos.Matrix</h1>
+            <br>
+            <div class="subtitle shattered-element">Standart UX/UI Qoidalarining Buzilish Nuqtasi</div>
+        </header>
+
+        <main class="content-chaos-grid">
+            
+            <div class="brutal-card shattered-element">
+                <h2>01 / Vizual Anarxiya</h2>
+                <p>Nega har bir sayt bir xil bo'lishi kerak? Dumaloq burchaklar, silliq animatsiyalar va zerikarli toza interfeyslar. Biz buni sindiramiz. Sichqonchani elementlar ustiga olib keling va ularning harakatini kuzating.</p>
+                <button class="trigger-btn" id="btn-infect">Matrisani Ishga Tushir</button>
+            </div>
+
+            <div class="brutal-card right shattered-element">
+                <h2>02 / Tizimli Xatolik</h2>
+                <p>Ushbu blok mutlaqo asimmetrik va tartibsiz joylashgan. Agar siz quyidagi qizil tugmani bossangiz, sahifadagi har bir element o'z o'qi va pozitsiyasidan chiqib, butunlay boshqa strukturaga o'tadi.</p>
+                <button class="trigger-btn btn-panic" id="btn-destroy">Dizaynni Sindirish</button>
+            </div>
+
+            <div class="brutal-card shattered-element" style="max-width: 750px; transform: rotate(-1deg);">
+                <h2>03 / Qatlamlar Urushi</h2>
+                <p>Elementlar bir-birining ustiga minib ketishi, matn o'qilarsiz holatga kelishi — bu xato emas, bu san'at. Biz veb-dizayn standartlarini oyoq osti qilamiz va brauzeringiz interfeysini real vaqtda portlatamiz.</p>
+            </div>
+
+        </main>
+
+        <footer>
+            [ Loyiha turi: Anti-Dizayn & Brutalizm Konseptsiyasi // 2026 ]
+        </footer>
+    </div>
+
+    <!-- Live Event Log Console -->
+    <div id="log-console">
+        <div class="log-line">>>> System initialized...</div>
+        <div class="log-line">>>> Integrity status: STABLE</div>
+        <div class="log-line">>>> Ready to break layouts.</div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const elements = document.querySelectorAll('.shattered-element');
+            const consoleBox = document.getElementById('log-console');
+            const destroyBtn = document.getElementById('btn-destroy');
+            const infectBtn = document.getElementById('btn-infect');
+            
+            let chaosMode = false;
+
+            // Console logging function
+            function logEvent(message) {
+                const line = document.createElement('div');
+                line.className = 'log-line';
+                line.innerText = `>>> ${message}`;
+                consoleBox.appendChild(line);
+                if (consoleBox.children.length > 10) {
+                    consoleBox.removeChild(consoleBox.children[0]);
+                }
+            }
+
+            // 1. Mouse Move Effect: Elements escape or shift when hovered/moved near
+            document.addEventListener('mousemove', (e) => {
+                if (chaosMode) return; // If destroyed, let physics take over
+
+                elements.forEach((el, index) => {
+                    const rect = el.getBoundingClientRect();
+                    const elX = rect.left + rect.width / 2;
+                    const elY = rect.top + rect.height / 2;
+                    
+                    // Distance between mouse and element center
+                    const distX = e.clientX - elX;
+                    const distY = e.clientY - elY;
+                    const distance = Math.sqrt(distX * distX + distY * distY);
+
+                    // If mouse is within 250px, push the element away slightly
+                    if (distance < 250) {
+                        const force = (250 - distance) / 15;
+                        const moveX = (distX / distance) * -force * (index % 2 === 0 ? 1 : -1);
+                        const moveY = (distY / distance) * -force * (index % 3 === 0 ? 1 : -1);
+                        const rotate = (distX / 20);
+                        
+                        el.style.transform = `translate(${moveX}px, ${moveY}px) rotate(${rotate}deg)`;
+                    } else {
+                        // Return to slightly chaotic resting state
+                        el.style.transform = `translate(0px, 0px) rotate(${(index % 2 === 0 ? 1 : -1) * (index + 1) * 0.5}deg)`;
+                    }
+                });
+            });
+
+            // 2. Infect Button - Glitches random parts
+            infectBtn.addEventListener('click', () => {
+                logEvent("CRITICAL ALERT: Glitch injection deployed.");
+                elements.forEach(el => {
+                    el.classList.add('active-glitch');
+                    // Random structural shift
+                    el.style.borderColor = 'var(--cyber-cyan)';
+                });
+                
+                setTimeout(() => {
+                    elements.forEach(el => el.classList.remove('active-glitch'));
+                    logEvent("Glitch simulation stabilized.");
+                }, 2000);
+            });
+
+            // 3. Destroy Button - Completely breaks the layout grid permanently until refresh
+            destroyBtn.addEventListener('click', () => {
+                chaosMode = true;
+                logEvent("FATAL: Layout engine destroyed.");
+                destroyBtn.innerText = "TIZIM SINDI!";
+                destroyBtn.style.background = '#000';
+                destroyBtn.style.color = 'var(--glitch-pink)';
+
+                elements.forEach((el) => {
+                    // Random catastrophic coordinates
+                    const randomX = Math.floor(Math.random() * 300) - 150;
+                    const randomY = Math.floor(Math.random() * 400) - 200;
+                    const randomRotate = Math.floor(Math.random() * 180) - 90;
+                    const randomScale = (Math.random() * 0.5) + 0.75;
+
+                    el.style.position = 'relative';
+                    el.style.transform = `translate(${randomX}px, ${randomY}px) rotate(${randomRotate}deg) scale(${randomScale})`;
+                    el.style.zIndex = Math.floor(Math.random() * 50);
+                    el.style.opacity = Math.random() * 0.4 + 0.6;
+                    
+                    // Break colors completely
+                    el.style.backgroundColor = `rgba(${Math.random()*50}, ${Math.random()*50}, ${Math.random()*50}, 0.9)`;
+                });
+
+                // Periodic explosion log
+                setInterval(() => {
+                    const errors = ["ERR_GRID_COLLAPSE", "STACK_OVERFLOW", "UI_RENDER_FAILED", "CSS_INTEGRITY_0"];
+                    logEvent(errors[Math.floor(Math.random() * errors.length)]);
+                }, 800);
+            });
+        });
+    </script>
+</body>
+</html>

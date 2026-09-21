@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <title>Boshqotirma o'yin</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial;
+      background: linear-gradient(120deg, #1f1c2c, #928dab);
+      color: white;
+      text-align: center;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .box {
+      background: rgba(0,0,0,0.4);
+      padding: 30px;
+      border-radius: 15px;
+      width: 300px;
+    }
+
+    input {
+      width: 80%;
+      padding: 10px;
+      font-size: 18px;
+      margin-top: 10px;
+      border-radius: 8px;
+      border: none;
+      text-align: center;
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      background: lime;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    #msg {
+      margin-top: 15px;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="box">
+  <h2>🧠 Boshqotirma o'yin</h2>
+  <p>1 dan 100 gacha sonni top!</p>
+
+  <input type="number" id="input" placeholder="Son kiriting">
+  <br>
+  <button onclick="check()">Tekshirish</button>
+
+  <div id="msg"></div>
+</div>
+
+<script>
+  let secretNumber = Math.floor(Math.random() * 100) + 1;
+  let attempts = 0;
+
+  function check() {
+    let guess = Number(document.getElementById("input").value);
+    let msg = document.getElementById("msg");
+
+    attempts++;
+
+    if (guess === secretNumber) {
+      msg.innerHTML = "🎉 Tabriklaymiz! Topding! Urinishlar: " + attempts;
+    } 
+    else if (guess > secretNumber) {
+      msg.innerHTML = "📉 Juda katta son!";
+    } 
+    else {
+      msg.innerHTML = "📈 Juda kichik son!";
+    }
+  }
+</script>
+
+</body>
+</html>
